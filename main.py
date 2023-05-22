@@ -1,5 +1,7 @@
+import asyncio
 import os
 import pickle
+import platform
 import time
 
 import easyocr
@@ -12,6 +14,8 @@ folder_path = 'F:\Data\PicPickPics'
 pytesseract.pytesseract.tesseract_cmd = r'F:\Program Files\Tesseract-OCR\tesseract'
 available_option = pytesseract.get_languages(config='')
 current_path = str()
+if platform.system() == 'Windows':
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 
 def load_last_files():
@@ -32,7 +36,7 @@ def easyocr_read_img(path):
 
 
 def tesseract_read_img(lang):
-    text = pytesseract.image_to_string(Image.open(current_path), lang=lang)
+    text = pytesseract.image_to_string(Image.open(current_path), lang=lang).replace('\n', ' ')
     print(text)
     return text
 
@@ -44,7 +48,7 @@ def retry(args):
 
 def copy_to_clipboard(text):
     pyperclip.copy(text)
-    toast('Text Copied! (Click to Retry)', text, dialogue=text,
+    toast('Text Copied! (Click to Retry)', text,
           on_click=retry, selection=available_option[:5])
 
 

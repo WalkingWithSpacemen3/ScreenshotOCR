@@ -13,4 +13,4 @@ def tesseract_read_img(lang):
     return text
 
 
-tesseract_read_img('jpn')
+tesseract_read_img('chi_sim')
