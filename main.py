@@ -23,7 +23,9 @@ def load_last_files():
         with open('files.pkl', 'rb') as f:
             last_files = pickle.load(f)
     except FileNotFoundError:
-        last_files = set()
+        last_files = {f.path for f in os.scandir(folder_path)}
+        with open('files.pkl', 'wb') as f:
+            pickle.dump(last_files, f)
     return last_files
 
 
@@ -59,7 +61,6 @@ def scan_files():
     return new_files, files
 
 
-last_files = load_last_files()
 while True:
     new_files, files = scan_files()
     # print(f'last files: {files}')
